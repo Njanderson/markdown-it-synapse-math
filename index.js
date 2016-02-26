@@ -94,7 +94,7 @@ function blockParser(state, startLine, endLine, silent) {
 
     // on last line, pattern may end without newline
     if (nextLine === endLine) {
-      if (state.src.slice(pos, pos + close.trim().length) !== close.trim()) {
+      if (state.src.slice(pos - close.trim().length, pos) !== close.trim()) {
         return false;
       }
     } else if (state.src.slice(pos, pos + close.length) !== close) {
