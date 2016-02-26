@@ -1,7 +1,6 @@
 'use strict';
 var prefix = 'mathjax-';
 var divIndex = 0;
-require('./lib/polyfills');
 function inlineParser(state, silent) {
   var content,
       token,
@@ -94,7 +93,15 @@ function blockParser(state, startLine, endLine, silent) {
 
     // on last line, pattern may end without newline
     if (nextLine === endLine) {
-      if (state.src.slice(pos - close.trim().length, pos) !== close.trim()) {
+      // last line is the line after what would be the ending '$$' or close
+      if (state.src.slice(pos - close.trim().length, pos) === close.trim()) {
+        // if this is a valid ending, do not include the ending line, which would
+        // only contain $$
+        nextLine--;
+        haveEndMarker = true;
+        // pos -= close.length;
+      } else {
+        // isn't closed by the last line
         return false;
       }
     } else if (state.src.slice(pos, pos + close.length) !== close) {
@@ -102,7 +109,7 @@ function blockParser(state, startLine, endLine, silent) {
       continue;
     }
 
-    pos += pos + close.length;
+    pos += close.length;
 
     // make sure tail has spaces only
     pos = state.skipSpaces(pos);
@@ -111,29 +118,22 @@ function blockParser(state, startLine, endLine, silent) {
     haveEndMarker = true;
   }
 
-  state.line = nextLine + (haveEndMarker ? 1 : 0);
+  state.line = nextLine + 1;
   token = state.push('math_block', 'math', 0);
   token.block = true;
   token.content = state.getLines(startLine + 1, nextLine, 0, true);
   token.info = params;
-  token.map = [ startLine, state.line ];
   token.markup = open;
   return true;
 }
 
-function makeInlineMathRenderer(suffix) {
+function makeRenderer(suffix) {
   return function(tokens, idx) {
     return '<span id="' + prefix + divIndex++ + suffix +
      '" class="math inline">' + tokens[idx].content + '</span>';
   };
 }
 
-function makeBlockMathRenderer(suffix) {
-  return function(tokens, idx) {
-    return '<span id="' + prefix + divIndex++ + suffix +
-     '" class="math block">' + tokens[idx].content + '</span>';
-  };
-}
 
 module.exports = function math_plugin(md, suffix) {
   divIndex = 0;
@@ -142,6 +142,7 @@ module.exports = function math_plugin(md, suffix) {
   md.block.ruler.after('blockquote', 'math_block', blockParser, {
     alt: [ 'paragraph', 'reference', 'blockquote', 'list' ]
   });
-  md.renderer.rules.math_inline = makeInlineMathRenderer(suffix);
-  md.renderer.rules.math_block = makeBlockMathRenderer(suffix);
+  var renderer = makeRenderer(suffix);
+  md.renderer.rules.math_inline = renderer;
+  md.renderer.rules.math_block = renderer;
 };
