@@ -3,7 +3,7 @@ markdown-it-synapse-math
 Based very loosely on markdown-it-math for integration with Synapse and our MathJax workflow.
 
 ```md
-Pythagoran theorem is $$/(a^2 + b^2 = c^2/)$$.
+Pythagoran theorem is $$/(a^2 + b^2 = c^2/)$$ will render to $$ a^2 + b^2 = c^2 $$.
 
 Bayes theorem:
 
@@ -12,6 +12,12 @@ $$
 P(A | B) = (P(B | A)P(A)) / P(B)
 \end{aligned}
 $$
+
+will render to:
+
+$$$
+P(A | B) = (P(B | A)P(A)) / P(B)
+$$$
 ```
 
 Installation
