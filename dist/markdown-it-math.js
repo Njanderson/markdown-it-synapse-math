@@ -1,52 +1,8 @@
 /*! markdown-it-math 3.0.2 https://github.com/runarberg/markdown-it-math @license MIT */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.markdownitMath = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
-
-/* Object.assign
- *
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/
- * Global_Objects/Object/assign
- *
- * This polyfill doesn't support symbol properties, since ES5 doesn't
- * have symbols anyway:
- */
-
-if (!Object.assign) {
-  Object.defineProperty(Object, 'assign', {
-    enumerable: false,
-    configurable: true,
-    writable: true,
-    value: function(target) {
-      if (typeof target === 'undefined' || target === null) {
-        throw new TypeError('Cannot convert first argument to object');
-      }
-
-      var to = Object(target);
-      for (var i = 1; i < arguments.length; i++) {
-        var nextSource = arguments[i];
-        if (typeof nextSource === 'undefined' || nextSource === null) {
-          continue;
-        }
-
-        var keysArray = Object.keys(Object(nextSource));
-        for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
-          var nextKey = keysArray[nextIndex];
-          var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
-          if (typeof desc !== 'undefined' && desc.enumerable) {
-            to[nextKey] = nextSource[nextKey];
-          }
-        }
-      }
-      return to;
-    }
-  });
-}
-
-},{}],2:[function(require,module,exports){
-'use strict';
 var prefix = 'mathjax-';
 var divIndex = 0;
-require('./lib/polyfills');
 function inlineParser(state, silent) {
   var content,
       token,
@@ -193,5 +149,5 @@ module.exports = function math_plugin(md, suffix) {
   md.renderer.rules.math_block = renderer;
 };
 
-},{"./lib/polyfills":1}]},{},[2])(2)
+},{}]},{},[1])(1)
 });
