@@ -6,7 +6,7 @@ Based very loosely on markdown-it-math for integration with Synapse and our Math
 Pythagoran theorem is $$/(a^2 + b^2 = c^2/)$$ will render to:
 ```
 ```TeX
-$$ a^2 + b^2 = c^2 $$.
+a^2 + b^2 = c^2
 ```
 ```md
 Bayes theorem:
@@ -17,12 +17,10 @@ P(A | B) = (P(B | A)P(A)) / P(B)
 \end{aligned}
 $$
 
-will render to:
+will render to a block with:
 ```
 ```TeX
-$$$
 P(A | B) = (P(B | A)P(A)) / P(B)
-$$$
 ```
 
 Installation
