@@ -39,16 +39,12 @@ describe('Parser', function() {
   it('Should fail if block is not closed', function() {
     var md = require('markdown-it')()
           .use(require('../'), 'test');
-    // if there isn't room for \end{aligned} on a newline, it won't be rendered
-    // properly by MathJax
     var res1 = md.render('$$\n\\begin{aligned}\n\end{aligned}\n');
     assert.equal(res1, '<p>$$\n\\begin{aligned}\nend{aligned}</p>\n');
   });
   it('Should pass if block is closed but without a newline', function() {
     var md = require('markdown-it')()
           .use(require('../'), 'test');
-    // if there isn't room for \end{aligned} on a newline, it won't be rendered
-    // properly by MathJax
     var res1 = md.render('$$\n\begin{aligned}\n\end{aligned}\n$$');
     assert.equal(res1, '<span id=\"mathjax-0test\" class=\"math block\">\begin{aligned}\nend{aligned}\n$$</span>');
   });
