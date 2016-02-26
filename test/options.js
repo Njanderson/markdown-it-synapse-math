@@ -2,69 +2,46 @@
 
 var assert = require('assert');
 
-describe('Options', function() {
-  it('Should allow single-double `$` as delimiters', function() {
+describe('Parser', function() {
+  it('Should pass basic inline rendering', function() {
     var md = require('markdown-it')()
-          .use(require('../'), {
-            inlineOpen: '$',
-            inlineClose: '$',
-            blockOpen: '$$',
-            blockClose: '$$'
-          });
-
-    var res1 = md.render('$1+1 = 2$');
-    var res2 = md.render('$$\n1+1 = 2\n$$');
-    assert.equal(res1, '<p><math><mrow><mn>1</mn><mo>+</mo><mn>1</mn></mrow><mo>=</mo><mn>2</mn></math></p>\n');
-    assert.equal(res2, '<math display="block"><mrow><mn>1</mn><mo>+</mo><mn>1</mn></mrow><mo>=</mo><mn>2</mn></math>\n');
+          .use(require('../'), 'test');
+    var res1 = md.render('$$\(1+1=2\)$$');
+    assert.equal(res1, '<p><span id=\"mathjax-0test\" class=\"math inline\">(1+1=2)</span></p>\n');
   });
-  it('Should allow LaTeX style delimiters', function() {
+  it('Should pass inline rendering with adjacent inline rendering', function() {
     var md = require('markdown-it')()
-          .use(require('../'), {
-            inlineOpen: '\\(',
-            inlineClose: '\\)',
-            blockOpen: '\\[',
-            blockClose: '\\]'
-          });
-
-    var res1 = md.render('\\(1+1 = 2\\)'),
-        res2 = md.render('\\[\n1+1 = 2\n\\]');
-    assert.equal(res1, '<p><math><mrow><mn>1</mn><mo>+</mo><mn>1</mn></mrow><mo>=</mo><mn>2</mn></math></p>\n');
-    assert.equal(res2, '<math display="block"><mrow><mn>1</mn><mo>+</mo><mn>1</mn></mrow><mo>=</mo><mn>2</mn></math>\n');
+          .use(require('../'), 'test');
+    var res1 = md.render('$$\(1+1=2\)$$$$\(1+1=2\)$$');
+    assert.equal(res1, '<p><span id=\"mathjax-0test\" class=\"math inline\">(1+1=2)</span><span id=\"mathjax-1test\" class=\"math inline\">(1+1=2)</span></p>\n');
   });
-});
-
-describe("Rendering options", function() {
-  it('Should allow different options', function() {
+  it('Should pass inline rendering with adjacent text', function() {
     var md = require('markdown-it')()
-          .use(require('../'), {
-            renderingOptions: {decimalMark: ','}
-          });
-
-    var res1 = md.render("$$40,2$$");
-    assert.equal(res1, '<p><math><mn>40,2</mn></math></p>\n');
-
-    var res2 = md.render("$$$\n40,2\n$$$");
-    assert.equal(res2, '<math display="block"><mn>40,2</mn></math>\n');
+          .use(require('../'), 'test');
+    var res1 = md.render('1+1=2$$\(1+1=2\)$$1+1=2');
+    assert.equal(res1, '<p>1+1=2<span id=\"mathjax-0test\" class=\"math inline\">(1+1=2)</span>1+1=2</p>\n');
   });
-});
-
-describe("Renderer", function() {
-  it('Should allow another renderer', function() {
-    var texzilla = require('texzilla');
+  it('Should pass basic block rendering', function() {
     var md = require('markdown-it')()
-          .use(require('../'), {
-            inlineRenderer: function(str) {
-              return texzilla.toMathMLString(str);
-            },
-            blockRenderer: function(str) {
-              return texzilla.toMathMLString(str, true);
-            }
-          });
+          .use(require('../'), 'test');
 
-    var res1 = md.render("$$1+1 = 2$$");
-    assert.equal(res1, '<p><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><mn>1</mn><mo>=</mo><mn>2</mn></mrow><annotation encoding="TeX">1+1 = 2</annotation></semantics></math></p>\n');
-
-    var res2 = md.render("$$$\n\\sin(2\\pi)\n$$$");
-    assert.equal(res2, '<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo lspace="0em" rspace="0em">sin</mo><mo stretchy="false">(</mo><mn>2</mn><mi>π</mi><mo stretchy="false">)</mo></mrow><annotation encoding="TeX">\\sin(2\\pi)\n</annotation></semantics></math>\n');
+    var res1 = md.render('$$\n\begin{aligned}\n\end{aligned}\n$$\n');
+    assert.equal(res1, '<span id=\"mathjax-0test\" class=\"math block\">\begin{aligned}\nend{aligned}\n</span>');
+  });
+  it('Should fail if block is too few lines', function() {
+    var md = require('markdown-it')()
+          .use(require('../'), 'test');
+    // if there isn't room for \end{aligned} on a newline, it won't be rendered
+    // properly by MathJax
+    var res1 = md.render('$$\n\\begin{aligned}\n$$\n');
+    assert.equal(res1, '<p>$$\n\\begin{aligned}\n$$</p>\n');
+  });
+  it('Should fail if block is not closed', function() {
+    var md = require('markdown-it')()
+          .use(require('../'), 'test');
+    // if there isn't room for \end{aligned} on a newline, it won't be rendered
+    // properly by MathJax
+    var res1 = md.render('$$\n\\begin{aligned}\n\end{aligned}\n');
+    assert.equal(res1, '<p>$$\n\\begin{aligned}\nend{aligned}</p>\n');
   });
 });
