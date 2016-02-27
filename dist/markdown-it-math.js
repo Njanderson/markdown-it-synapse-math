@@ -132,7 +132,7 @@ function blockParser(state, startLine, endLine, silent) {
 function makeRenderer(suffix) {
   return function(tokens, idx) {
     return '<span id="' + prefix + divIndex++ + suffix +
-     '" class="math inline">' + tokens[idx].content + '</span>';
+     '" class="math">' + tokens[idx].content + '</span>';
   };
 }
 
