@@ -7,9 +7,16 @@ function inlineParser(state, silent) {
       found = false,
       max = state.posMax,
       start = state.pos,
-      open = '$$',
+      ch  = state.src.charCodeAt(start),
+      open = '$',
+      close = '$';
+  if (ch !== 0x24/* $ */ || start >= max) { return false; }
+  if (state.pos + 1 < state.posMax) {
+    if (state.src.charCodeAt(start + 1) === 0x24 /* $ */) {
+      open = '$$';
       close = '$$';
-
+    }
+  }
   if (state.src.slice(state.pos, state.pos + open.length) !== open) {
     return false;
   }

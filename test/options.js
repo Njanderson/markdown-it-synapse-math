@@ -9,6 +9,12 @@ describe('Parser', function() {
     var res1 = md.render('$$\(1+1=2\)$$');
     assert.equal(res1, '<p><span id=\"mathjax-0test\" class=\"math\">(1+1=2)</span></p>\n');
   });
+  it('should pass basic inline rendering with single markers', function() {
+    var md = require('markdown-it')()
+          .use(require('../'), 'test');
+    var res1 = md.render('$\(1+1=2\)$');
+    assert.equal(res1, '<p><span id=\"mathjax-0test\" class=\"math\">(1+1=2)</span></p>\n');
+  });
   it('should pass inline rendering with adjacent inline rendering', function() {
     var md = require('markdown-it')()
           .use(require('../'), 'test');
