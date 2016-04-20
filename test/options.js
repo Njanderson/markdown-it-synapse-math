@@ -67,4 +67,10 @@ describe('Parser', function() {
     // should pass on the '\begin{aligned}\nend{aligned}\n' to the MathJax library, as it uses this for creating block level
     assert.equal(res1, '<p><em>text above</em></p>\n<span id=\"mathjax-0test\" class=\"math\">\begin{aligned}\nend{aligned}\n</span>');
   });
+  it('should not attempt to process synapse widgets', function() {
+    var md = require('markdown-it')()
+          .use(require('../'), 'test');
+    var res1 = md.render('${reference?text=a} ${reference?text=b} ${reference?text=c}');
+    assert.equal(res1, '<p>${reference?text=a} ${reference?text=b} ${reference?text=c}</p>\n');
+  });
 });
