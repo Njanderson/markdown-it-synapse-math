@@ -15,6 +15,8 @@ function inlineParser(state, silent) {
     if (state.src.charCodeAt(start + 1) === 0x24 /* $ */) {
       open = '$$';
       close = '$$';
+    } else if (state.src.charCodeAt(start + 1) === 0x7B /* { */) {
+      return false;
     }
   }
   if (state.src.slice(state.pos, state.pos + open.length) !== open) {
