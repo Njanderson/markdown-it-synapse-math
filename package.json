@@ -1,5 +1,5 @@
 {
-  "name": "markdown-it-math",
+  "name": "markdown-it-synapse-math",
   "version": "3.0.4",
   "description": "Markdown-it plugin to include math in your document",
   "main": "index.js",
@@ -7,18 +7,18 @@
     "test": "test"
   },
   "scripts": {
-    "browserify": "(echo \"/*! ${npm_package_name} ${npm_package_version} ${npm_package_homepage} @license MIT */\"; browserify ./ -s markdownitMath) > dist/markdown-it-math.js",
+    "browserify": "(echo \"/*! ${npm_package_name} ${npm_package_version} ${npm_package_homepage} @license MIT */\"; browserify ./ -s markdownitMath) > dist/markdown-it-synapse-math.js",
     "predist": "npm run test",
     "dist": "rm -fr dist; mkdir dist; npm run browserify; npm run minify",
     "lint": "eslint index.js lib/",
-    "minify": "uglifyjs dist/markdown-it-math.js -b beautify=false,ascii-only=true -c -m --preamble \"/*! ${npm_package_name} ${npm_package_version} ${npm_package_homepage} @license MIT */\" > dist/markdown-it-math.min.js",
+    "minify": "uglifyjs dist/markdown-it-synapse-math.js -b beautify=false,ascii-only=true -c -m --preamble \"/*! ${npm_package_name} ${npm_package_version} ${npm_package_homepage} @license MIT */\" > dist/markdown-it-synapse-math.min.js",
     "prepublish": "npm run dist",
     "pretest": "npm run lint",
     "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/runarberg/markdown-it-math"
+    "url": "https://github.com/Njanderson/markdown-it-synapse-math"
   },
   "keywords": [
     "markdown-it",
@@ -30,9 +30,9 @@
   "author": "Rúnar Berg Baugsson Sigríðarson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/runarberg/markdown-it-math/issues"
+    "url": "https://github.com/Njanderson/markdown-it-synapse-math/issues"
   },
-  "homepage": "https://github.com/runarberg/markdown-it-math",
+  "homepage": "https://github.com/Njanderson/markdown-it-synapse-math",
   "optionalDependencies": {
     "ascii2mathml": "^0.5.3"
   },
